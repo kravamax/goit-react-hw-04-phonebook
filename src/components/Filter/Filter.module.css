@@ -1,0 +1,26 @@
+.filterContainer {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  margin-top: 20px;
+  width: 400px;
+  padding: 30px;
+  background-color: #ffffff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  text-align: left;
+}
+
+.title {
+  margin: 0;
+  margin-bottom: 20px;
+
+  font-size: 1.2rem;
+}
+
+.input {
+  padding: 10px 12px;
+
+  border: 1px solid #111111;
+  border-radius: 20px;
+}

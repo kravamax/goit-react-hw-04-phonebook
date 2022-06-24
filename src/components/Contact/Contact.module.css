@@ -1,0 +1,44 @@
+.contact {
+  display: flex;
+  justify-content: space-between;
+}
+
+.contact:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+.text {
+  margin: 0;
+  border-radius: 10px;
+
+  transition: all 250ms linear;
+}
+
+.button {
+  background-color: inherit;
+  border-radius: 10px;
+
+  cursor: pointer;
+}
+
+.button:before {
+  content: '✘';
+  background-color: inherit;
+  cursor: pointer;
+  font-weight: 800;
+
+  transition: all 250ms linear;
+}
+
+.button:hover:before {
+  color: red;
+}
+
+.contact:hover .text {
+  color: #ffffff;
+  background-color: #3f62f1;
+  border-radius: 10px;
+
+  padding: 0 10px;
+  margin-left: 10px;
+}
