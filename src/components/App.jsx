@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import contactsData from './contacts.json';
 
@@ -7,87 +7,66 @@ import Filter from './Filter';
 import ContactList from './ContactList';
 import Container from './Container';
 
-export class App extends Component {
-  state = {
-    contacts: [],
-    filter: '',
-  };
+const App = () => {
+  const [contacts, setContacts] = useState([]);
+  const [filter, setFilter] = useState('');
 
-  componentDidMount() {
+  useEffect(() => {
     const storageData = localStorage.getItem('contacts');
     const parsedstorageData = JSON.parse(storageData);
 
-    if (!parsedstorageData) {
-      this.setState({ contacts: contactsData });
-    } else {
-      this.setState({ contacts: parsedstorageData });
-    }
-  }
+    !parsedstorageData.length
+      ? setContacts(contactsData)
+      : setContacts(parsedstorageData);
+  }, []);
 
-  componentDidUpdate(prevProps, prevstate) {
-    const nextContacts = this.state.contacts;
-    const prevContacts = prevstate.contacts;
+  useEffect(
+    () => localStorage.setItem('contacts', JSON.stringify(contacts)),
+    [contacts]
+  );
 
-    if (prevContacts !== nextContacts) {
-      localStorage.setItem('contacts', JSON.stringify(nextContacts));
-    }
-  }
-
-  addContact = contact => {
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts, contact],
-    }));
-
+  const addContact = contact => {
+    setContacts([...contacts, contact]);
     Notify.success(`${contact.name} added to contacts!`);
   };
 
-  changeFilter = event => {
+  const changeFilter = event => {
     const { value } = event.currentTarget;
-    this.setState({ filter: value });
+    setFilter(value);
   };
 
-  filterByName = () => {
-    const { contacts, filter } = this.state;
+  const filterByName = () => {
     const normilizeFilter = filter.toLocaleLowerCase();
-
     const filteredData = contacts.filter(({ name }) =>
       name.toLocaleLowerCase().includes(normilizeFilter)
     );
-
     return filteredData;
   };
 
-  deleteContact = (idContact, name) => {
+  const deleteContact = (idContact, name) => {
     Notify.info(`${name} was deleted from contacts!`);
-
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== idContact),
-    }));
+    setContacts(contacts.filter(contact => contact.id !== idContact));
   };
 
-  getNamesListOfContacts = () => {
-    const { contacts } = this.state;
+  const getNamesListOfContacts = () => {
     return contacts.map(({ name }) => name);
   };
 
-  render() {
-    return (
-      <div>
-        <Container>
-          <h1>Phonebook</h1>
-          <ContactForm
-            contacts={this.getNamesListOfContacts()}
-            onSubmit={this.addContact}
-          />
+  return (
+    <div>
+      <Container>
+        <h1>Phonebook</h1>
+        <ContactForm
+          contacts={getNamesListOfContacts()}
+          onSubmit={addContact}
+        />
 
-          <h2>Contacts</h2>
-          <Filter value={this.state.filter} onChange={this.changeFilter} />
-          <ContactList
-            list={this.filterByName()}
-            onDeleteClick={this.deleteContact}
-          />
-        </Container>
-      </div>
-    );
-  }
-}
+        <h2>Contacts</h2>
+        <Filter value={filter} onChange={changeFilter} />
+        <ContactList list={filterByName()} onDeleteClick={deleteContact} />
+      </Container>
+    </div>
+  );
+};
+
+export default App;
