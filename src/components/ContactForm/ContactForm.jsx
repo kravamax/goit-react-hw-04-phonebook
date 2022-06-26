@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
@@ -6,8 +6,20 @@ import PropTypes from 'prop-types';
 import s from './ContactForm.module.css';
 
 const ContactForm = ({ contacts, onSubmit }) => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [name, setName] = useState(() => {
+    return JSON.parse(window.localStorage.getItem('name')) ?? '';
+  });
+  const [number, setNumber] = useState(() => {
+    return JSON.parse(window.localStorage.getItem('number')) ?? '';
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem('name', JSON.stringify(name));
+  }, [name]);
+
+  useEffect(() => {
+    window.localStorage.setItem('number', JSON.stringify(number));
+  }, [number]);
 
   const handleChange = event => {
     const { value, name } = event.currentTarget;

@@ -15,7 +15,7 @@ const App = () => {
     const storageData = localStorage.getItem('contacts');
     const parsedstorageData = JSON.parse(storageData);
 
-    !parsedstorageData.length
+    parsedstorageData.length === 0
       ? setContacts(contactsData)
       : setContacts(parsedstorageData);
   }, []);
