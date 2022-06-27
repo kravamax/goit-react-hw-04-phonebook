@@ -1,30 +1,19 @@
-import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 import PropTypes from 'prop-types';
 import s from './ContactForm.module.css';
+import useLocalStorage from '../../hooks/usLocalStorage';
 
 const ContactForm = ({ contacts, onSubmit }) => {
-  const [name, setName] = useState(() => {
-    return JSON.parse(window.localStorage.getItem('name')) ?? '';
-  });
-  const [number, setNumber] = useState(() => {
-    return JSON.parse(window.localStorage.getItem('number')) ?? '';
-  });
-
-  useEffect(() => {
-    window.localStorage.setItem('name', JSON.stringify(name));
-  }, [name]);
-
-  useEffect(() => {
-    window.localStorage.setItem('number', JSON.stringify(number));
-  }, [number]);
+  const [name, setName] = useLocalStorage('name', '');
+  const [number, setNumber] = useLocalStorage('number', '');
 
   const handleChange = event => {
     const { value, name } = event.currentTarget;
 
-    name === 'name' ? setName(value) : setNumber(value);
+    if (name === 'name') setName(value);
+    if (name === 'number') setNumber(value);
   };
 
   const handleSubmit = event => {

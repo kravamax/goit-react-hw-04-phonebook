@@ -13,17 +13,19 @@ const App = () => {
 
   useEffect(() => {
     const storageData = localStorage.getItem('contacts');
-    const parsedstorageData = JSON.parse(storageData);
+    const parsedStorageData = JSON.parse(storageData);
 
-    parsedstorageData.length === 0
-      ? setContacts(contactsData)
-      : setContacts(parsedstorageData);
+    if (parsedStorageData === null || parsedStorageData.length === 0) {
+      setContacts(contactsData);
+      return;
+    }
+
+    setContacts(parsedStorageData);
   }, []);
 
-  useEffect(
-    () => localStorage.setItem('contacts', JSON.stringify(contacts)),
-    [contacts]
-  );
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   const addContact = contact => {
     setContacts([...contacts, contact]);
